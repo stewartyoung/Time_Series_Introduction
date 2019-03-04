@@ -2,6 +2,7 @@
 
 # Multiplicative Decomposition of Time Series Models
 
+
 # Create a vector track of quarters across 4 years
 Quarters<-c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
 
@@ -11,4 +12,16 @@ StockPrice<-c(3.89414, 3.40792, 1.24523, 4.20107,
               11.6921, 11.0655, 9.87043, 12.8885,
               15.7568, 15.7817, 13.6428, 16.2162)
 
+
+# Plot the data points
 plot(x = Quarters, y = StockPrice)
+
+# Add a line of best fit
+abline(lm(StockPrice~Quarters), col="red", lwd=2)
+
+
+# Calculate the alpha and beta coefficients, where model Y = alpha + beta * time
+Beta <- (length(Quarters) * sum(StockPrice * Quarters) - sum(StockPrice)*sum(Quarters))/
+  (length(Quarters) * sum(Quarters ^ 2) - sum(Quarters) ^ 2 )
+Alpha <- mean(StockPrice) - Beta * mean(Quarters) 
+          
