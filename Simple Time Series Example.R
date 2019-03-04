@@ -24,4 +24,12 @@ abline(lm(StockPrice~Quarters), col="red", lwd=2)
 Beta <- (length(Quarters) * sum(StockPrice * Quarters) - sum(StockPrice)*sum(Quarters))/
   (length(Quarters) * sum(Quarters ^ 2) - sum(Quarters) ^ 2 )
 Alpha <- mean(StockPrice) - Beta * mean(Quarters) 
-          
+ 
+# Now caluclate the trend line Y = = alpha + beta * time
+Trend <- Alpha + Beta * Quarters
+
+#Plot the data and add the trend line
+plot(x= Quarters, y = StockPrice)
+lines(Trend, col = "red")
+
+
