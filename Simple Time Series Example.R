@@ -51,8 +51,8 @@ for (i in 0:3){
   ThirdQuarterSum = ThirdQuarterSum + StockOverTrend[3 + i*QuartersInYear]
   FourthQuarterSum = FourthQuarterSum + StockOverTrend[4 + i*QuartersInYear]
 }
-YearlyCycle <- c(FirstQuarterSum/QuartersInYear, SecondQuarterSum/QuartersInYear, ThirdQuarterSum/QuartersInYear, FourthQuarterSum/QuartersInYear)
-FourYearCycle <- rep(YearlyCycle, times=4)
+OneYearCycle <- c(FirstQuarterSum/QuartersInYear, SecondQuarterSum/QuartersInYear, ThirdQuarterSum/QuartersInYear, FourthQuarterSum/QuartersInYear)
+YearlyCycle <- rep(OneYearCycle, times=4)
 
 # Get the predictions, Trend * Cyclical
 Prediction <- Trend * FourYearCycle
@@ -64,3 +64,25 @@ lines(Prediction, col="red")
 
 plot(x= Quarters , y = StockPrice, pch=16, col = "orange")
 points(x = Prediction, pch=16, col="blue")
+
+
+# Predict the 17th quarter stock price
+Trend[17] <- Alpha + Beta * 17
+YearlyCycle[17] <- OneYearCycle[1]
+Prediction[17] <- Trend[17] * YearlyCycle[17]
+Quarters[17] <- 17 
+
+# Plot stock prices with the predicted 17th Quarter price
+# NOTE: Need to use ggplot as the vectors are now of differing lengths
+install.packages("ggplot2")
+library("ggplot2")
+
+dat <- list(StockPrice, Prediction)
+dat <- lapply(dat, function(x) cbind(x = seq_along(x), y = x))
+list.names <- c("StockPrice", "Prediction")
+LinesToPlot <- sapply(dat, nrow)
+dat <- as.data.frame(do.call("rbind", dat))
+dat$group <- rep(list.names, lns)
+ggplot(dat, aes(x = x, y = y, colour = group)) +
+  theme_bw() +
+  geom_point()
