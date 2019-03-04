@@ -32,25 +32,26 @@ Trend <- Alpha + Beta * Quarters
 plot(x= Quarters, y = StockPrice)
 lines(Trend, col = "red")
 
+StockOverTrend <- StockPrice/Trend
 
 # Plot Y/Trend to leave just the cyclical component
 # NOTE: type = "o" plots dots and line connection
-plot(x= Quarters, y = StockPrice/Trend, type = "o")
+plot(x= Quarters, y = StockOverTrend, type = "o")
 
 
 # To get cyclical trend,  we need to get the average of each quarter
-QuartersInYear = 4
+QuartersInYear <- 4
 FirstQuarterSum <- 0
 SecondQuarterSum <- 0 
 ThirdQuarterSum <- 0 
 FourthQuarterSum <- 0
 for (i in 0:3){
-  FirstQuarterSum = FirstQuarterSum + StockPrice[1 + i*QuartersInYear]
-  SecondQuarterSum = SecondQuarterSum + StockPrice[2 + i*QuartersInYear]
-  ThirdQuarterSum = ThirdQuarterSum + StockPrice[3 + i*QuartersInYear]
-  FourthQuarterSum = FourthQuarterSum + StockPrice[4 + i*QuartersInYear]
+  FirstQuarterSum = FirstQuarterSum + StockOverTrend[1 + i*QuartersInYear]
+  SecondQuarterSum = SecondQuarterSum + StockOverTrend[2 + i*QuartersInYear]
+  ThirdQuarterSum = ThirdQuarterSum + StockOverTrend[3 + i*QuartersInYear]
+  FourthQuarterSum = FourthQuarterSum + StockOverTrend[4 + i*QuartersInYear]
 }
-YearlyCycle <- c(mean(FirstQuarterSum), mean(SecondQuarterSum), mean(ThirdQuarterSum), mean(FourthQuarterSum))
+YearlyCycle <- c(FirstQuarterSum/QuartersInYear, SecondQuarterSum/QuartersInYear, ThirdQuarterSum/QuartersInYear, FourthQuarterSum/QuartersInYear)
 FourYearCycle <- rep(YearlyCycle, each = 4)
 
 
