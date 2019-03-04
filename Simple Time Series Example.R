@@ -32,7 +32,7 @@ Trend <- Alpha + Beta * Quarters
 plot(x= Quarters, y = StockPrice)
 lines(Trend, col = "red")
 
-StockOverTrend <- StockPrice/Trend
+StockPriceWithTrendRemoved <- StockPrice/Trend
 
 # Plot Y/Trend to leave just the cyclical component
 # NOTE: type = "o" plots dots and line connection
@@ -52,6 +52,15 @@ for (i in 0:3){
   FourthQuarterSum = FourthQuarterSum + StockOverTrend[4 + i*QuartersInYear]
 }
 YearlyCycle <- c(FirstQuarterSum/QuartersInYear, SecondQuarterSum/QuartersInYear, ThirdQuarterSum/QuartersInYear, FourthQuarterSum/QuartersInYear)
-FourYearCycle <- rep(YearlyCycle, each = 4)
+FourYearCycle <- rep(YearlyCycle, times=4)
 
+# Get the predictions, Trend * Cyclical
+Prediction <- Trend * FourYearCycle
 
+# Plot the StockPrices with Predictions overlaid
+par(mfrow = c(1,2))
+plot(x= Quarters , y = StockPrice, pch=16)
+lines(Prediction, col="red")
+
+plot(x= Quarters , y = StockPrice, pch=16, col = "orange")
+points(x = Prediction, pch=16, col="blue")
