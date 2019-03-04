@@ -28,8 +28,29 @@ Alpha <- mean(StockPrice) - Beta * mean(Quarters)
 # Now caluclate the trend line Y = = alpha + beta * time
 Trend <- Alpha + Beta * Quarters
 
-#Plot the data and add the trend line
+# Plot the data and add the trend line
 plot(x= Quarters, y = StockPrice)
 lines(Trend, col = "red")
+
+
+# Plot Y/Trend to leave just the cyclical component
+# NOTE: type = "o" plots dots and line connection
+plot(x= Quarters, y = StockPrice/Trend, type = "o")
+
+
+# To get cyclical trend,  we need to get the average of each quarter
+QuartersInYear = 4
+FirstQuarterSum <- 0
+SecondQuarterSum <- 0 
+ThirdQuarterSum <- 0 
+FourthQuarterSum <- 0
+for (i in 0:3){
+  FirstQuarterSum = FirstQuarterSum + StockPrice[1 + i*QuartersInYear]
+  SecondQuarterSum = SecondQuarterSum + StockPrice[2 + i*QuartersInYear]
+  ThirdQuarterSum = ThirdQuarterSum + StockPrice[3 + i*QuartersInYear]
+  FourthQuarterSum = FourthQuarterSum + StockPrice[4 + i*QuartersInYear]
+}
+YearlyCycle <- c(mean(FirstQuarterSum), mean(SecondQuarterSum), mean(ThirdQuarterSum), mean(FourthQuarterSum))
+FourYearCycle <- rep(YearlyCycle, each = 4)
 
 
