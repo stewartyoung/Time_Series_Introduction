@@ -21,6 +21,7 @@ abline(lm(StockPrice~Quarters), col="red", lwd=2)
 
 
 # Calculate the alpha and beta coefficients, where model Y = alpha + beta * time
+# NOTE: You can just get the trend line from by doing abline, but above splits out the math
 Beta <- (length(Quarters) * sum(StockPrice * Quarters) - sum(StockPrice)*sum(Quarters))/
   (length(Quarters) * sum(Quarters ^ 2) - sum(Quarters) ^ 2 )
 Alpha <- mean(StockPrice) - Beta * mean(Quarters) 
@@ -32,7 +33,7 @@ Trend <- Alpha + Beta * Quarters
 plot(x= Quarters, y = StockPrice)
 lines(Trend, col = "red")
 
-StockPriceWithTrendRemoved <- StockPrice/Trend
+StockOverTrend <- StockPrice/Trend
 
 # Plot Y/Trend to leave just the cyclical component
 # NOTE: type = "o" plots dots and line connection
@@ -55,7 +56,7 @@ OneYearCycle <- c(FirstQuarterSum/QuartersInYear, SecondQuarterSum/QuartersInYea
 YearlyCycle <- rep(OneYearCycle, times=4)
 
 # Get the predictions, Trend * Cyclical
-Prediction <- Trend * FourYearCycle
+Prediction <- Trend * YearlyCycle
 
 # Plot the StockPrices with Predictions overlaid
 par(mfrow = c(1,2))
@@ -74,15 +75,15 @@ Quarters[17] <- 17
 
 # Plot stock prices with the predicted 17th Quarter price
 # NOTE: Need to use ggplot as the vectors are now of differing lengths
-install.packages("ggplot2")
+# install.packages("ggplot2")
 library("ggplot2")
 
-dat <- list(StockPrice, Prediction)
-dat <- lapply(dat, function(x) cbind(x = seq_along(x), y = x))
+Data <- list(StockPrice, Prediction)
+Data <- lapply(Data, function(x) cbind(x = seq_along(x), y = x))
 list.names <- c("StockPrice", "Prediction")
-LinesToPlot <- sapply(dat, nrow)
-dat <- as.data.frame(do.call("rbind", dat))
-dat$group <- rep(list.names, lns)
-ggplot(dat, aes(x = x, y = y, colour = group)) +
+LinesToPlot <- sapply(Data, nrow)
+Data <- as.data.frame(do.call("rbind", Data))
+Data$group <- rep(list.names, LinesToPlot)
+ggplot(Data, aes(x = x, y = y, colour = group)) +
   theme_bw() +
   geom_point()
